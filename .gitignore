@@ -53,3 +53,4 @@ dkms.conf
 voip_server.code-workspace
 **/build/**
 **/bin/**
+**/.vscode/**
