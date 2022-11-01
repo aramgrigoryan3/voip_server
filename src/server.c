@@ -11,7 +11,11 @@
 int init_server (struct server_ctx** srvr)
 {
     *srvr = (struct server_ctx*)malloc(sizeof(struct server_ctx));
-    return *srvr == NULL ? VOIP_SERVER_FAIL : VOIP_SERVER_SUCCESS;
+    if (srvr == NULL){
+        printf("[DEBUG] [%d] [%s]: Server init set Error,  not valid\n", __LINE__, __FUNCTION__);
+        exit(1);
+    }
+    return VOIP_SERVER_SUCCESS;
 }
 
 int prepare_server  (struct server_ctx** srvr, int port)
@@ -46,11 +50,11 @@ int bind_server (struct server_ctx** server_ctx)
     }
     (*server_ctx)->address->sin_family = VOIP_SERVER_DOMAIN;
     (*server_ctx)->address->sin_addr.s_addr = INADDR_ANY;
-    (*server_ctx)->address->sin_port = htons(VOIP_SERVER_INFO_PORT);
+    (*server_ctx)->address->sin_port = htons((*server_ctx)->listen_port);
     
     /* Bind newly created socket to address struct */
     socklen_t addrlen = sizeof(struct sockaddr_in); 
-    sts = bind((*server_ctx)->server_fd, (*server_ctx)->address, addrlen);
+    sts = bind((*server_ctx)->server_fd, (struct sockaddr*)((*server_ctx)->address), addrlen);
     if (sts < 0){
         printf("[DEBUG] [%d] [%s]: Address bind Error,  not valid\n", __LINE__, __FUNCTION__);
         exit(1);        
@@ -69,17 +73,20 @@ int set_socket_listen (struct server_ctx** server_ctx, unsigned long backlog)
     return VOIP_SERVER_SUCCESS;
 }
 
-int set_socket_accept   (struct server_ctx** server_ctx, int* newfd)
+int set_socket_accept   (struct server_ctx** server_ctx, int* newfd, int (*callback)(int,char*))
 {
     char buffer[256];
+    int valread;
     socklen_t addrlen = sizeof(struct sockaddr_in);
-    *newfd = accept((*server_ctx)->server_fd, (*server_ctx)->address, &addrlen);
+
+    *newfd = accept((*server_ctx)->server_fd, (struct sockaddr*)((*server_ctx)->address), &addrlen);
     printf("Descriptor %d\n", *newfd);
     if(*newfd < 0){
         printf("[DEBUG] [%d] [%s]: Socket accept Error, sfd not valid\n", __LINE__, __FUNCTION__);
         exit(1);  
     }
-    int valread = read(*newfd, buffer, 256);
+    valread = read(*newfd, buffer, 256);
+    (void)callback(valread, buffer);
     return VOIP_SERVER_SUCCESS;
 }
 

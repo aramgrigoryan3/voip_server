@@ -19,21 +19,21 @@ struct server_ctx {
     int opt;
 };
 
-int init_server    (struct server_ctx** srvr);
+int init_server         (struct server_ctx** srvr);
 
-int prepare_server     (struct server_ctx** srvr, int port);
+int prepare_server      (struct server_ctx** srvr, int port);
 
-int bind_server    (struct server_ctx** server_ctx);
+int bind_server         (struct server_ctx** server_ctx);
 
 int set_socket_listen   (struct server_ctx** server_ctx, unsigned long backlog);
 
-int set_socket_accept   (struct server_ctx** server_ctx, int* newfd);
+int set_socket_accept   (struct server_ctx** server_ctx, int* newfd, int (*callback)(int,char*));
 
-int open_socket    (struct server_ctx**  server_ctx);
+int open_socket         (struct server_ctx**  server_ctx);
 
-int stop_server    (struct server_ctx**  server_ctx);
+int stop_server         (struct server_ctx**  server_ctx);
 
-int clean_server   (struct server_ctx**  server_ctx);
+int clean_server        (struct server_ctx**  server_ctx);
 
 
 #endif /* __SERVER__H__ */
