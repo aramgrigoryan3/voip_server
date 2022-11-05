@@ -1,11 +1,12 @@
 #include "server.h"
+#include "user.h"
 #include <stdio.h>
 
 int print_buffer (int buflen, char* buffer)
 {
     printf("Length of buffer: %d\n", buflen);
-    printf("Buffer : %s", buffer);
-    return 0;
+    printf("Buffer: %s\n", buffer);
+    return 0;   
 }
 
 int main(int argc, char* argv[])

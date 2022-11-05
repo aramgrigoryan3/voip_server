@@ -1,16 +1,19 @@
 #ifndef __SERVER__H__ 
 #define __SERVER__H__
 
+#include "constants.h"
+#include "user.h"
 
-#define VOIP_SERVER_SUCCESS 0
-#define VOIP_SERVER_FAIL    1
-#define VOIP_SERVER_BACKLOG 255
-#define VOIP_SERVER_DOMAIN  AF_INET    // Network connections via IPv4
-#define VOIP_SERVER_TYPE    SOCK_STREAM //Specifies UDP-family 
-#define VOIP_SERVER_PROTOCOL 0 //Internet Protocol
-#define VOIP_SERVER_INFO_PORT 10001
+#include <stdio.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 struct server_ctx {
-    int listen_port;
+    int listen_port; 
     int running;
     int active_users;
     int server_fd;

@@ -1,10 +1,3 @@
-#include <stdio.h>
-#include <netinet/in.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 #include "server.h"
 
@@ -75,18 +68,21 @@ int set_socket_listen (struct server_ctx** server_ctx, unsigned long backlog)
 
 int set_socket_accept   (struct server_ctx** server_ctx, int* newfd, int (*callback)(int,char*))
 {
-    char buffer[256];
-    int valread;
     socklen_t addrlen = sizeof(struct sockaddr_in);
-
-    *newfd = accept((*server_ctx)->server_fd, (struct sockaddr*)((*server_ctx)->address), &addrlen);
-    printf("Descriptor %d\n", *newfd);
-    if(*newfd < 0){
-        printf("[DEBUG] [%d] [%s]: Socket accept Error, sfd not valid\n", __LINE__, __FUNCTION__);
-        exit(1);  
-    }
-    valread = read(*newfd, buffer, 256);
-    (void)callback(valread, buffer);
+    // while (1)
+    // {
+        *newfd = accept((*server_ctx)->server_fd, (struct sockaddr*)((*server_ctx)->address), &addrlen);
+        printf("Descriptor %d\n", *newfd);
+        if(*newfd < 0){
+            printf("[DEBUG] [%d] [%s]: Socket accept Error, sfd not valid\n", __LINE__, __FUNCTION__);
+            exit(1);  
+        }
+        struct user_dsc* desc = (struct user_dsc*)malloc(sizeof(struct user_dsc));
+        desc->sock_fd = *newfd;
+        desc->u_uid = 1;
+        // free_user(&desc);
+        spawn_user(&desc, callback);
+    // }
     return VOIP_SERVER_SUCCESS;
 }
 

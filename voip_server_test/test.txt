@@ -1,0 +1,5 @@
+spawn nc localhost 10001
+	send "GETP\n"
+	expect -re {200 [\w\d]+:[\.\d]+:\d+:\d+\r\n}
+    
+close

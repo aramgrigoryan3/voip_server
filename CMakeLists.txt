@@ -3,6 +3,6 @@ project(VOIP_Server)
 
 set (SOURCE_DIR "src/")
 file(GLOB SOURCES 
-     "${SOURCE_DIR}*.c"
+     "${SOURCE_DIR}**.c"
 )
 add_subdirectory(src)
